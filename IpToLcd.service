@@ -1,0 +1,22 @@
+
+[Unit]
+Description=My Script Service
+After=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi
+ExecStart=/bin/bash -c ' \
+    IPs=$(hostname --all-ip-addresses); \
+    while [ -z $IPs ]; \
+    do \
+        echo network-wait-online: addresses=$IPs; \
+        sleep 1; \
+        IPs=$(hostname --all-ip-addresses); \
+        $(sudo sh /home/pi/Documents/rasPiCar/IpToLcd.sh); \
+    done'
+TimeoutStartSec=1min 30s
+
+[Install]
+WantedBy=multi-user.target
